@@ -46,6 +46,21 @@ def main():
         forced = re.search(r"\s(--force(?!-with-lease)\b|-[a-z]*f[a-z]*\b|\+\S)", segment)
         if forced and re.search(r"\b(main|master)\b", segment):
             deny("blocked shell: force push to default branch")
+    for segment in re.split(r"&&|\|\||[;|\n]", lower):
+        # Only where git is the command, so `echo git clean -fdx` passes.
+        git = re.match(r"\s*(?:sudo\s+)?git(?:\s+-c\s+\S+)*\s+(\S+)(.*)", segment)
+        if not git:
+            continue
+        sub, rest = git.group(1), git.group(2)
+        if sub == "reset" and re.search(r"(^|\s)--hard\b", rest):
+            deny("blocked shell: git reset --hard throws away uncommitted work; git stash first, or ask")
+        clean = re.match(r"(.*)", rest) if sub == "clean" else None
+        if clean:
+            flags = clean.group(1)
+            dry = re.search(r"\s(-[a-z]*n[a-z]*|--dry-run)\b", flags)
+            force = re.search(r"\s(-[a-z]*f[a-z]*|--force)\b", flags)
+            if force and not dry:
+                deny("blocked shell: git clean -f deletes untracked files for good; run git clean -n first, or ask")
     if re.search(r"\bformat\s+[a-z]:", lower):
         deny("blocked shell: format drive")
     if re.search(r"\bdel\s+/[fq]\s+", lower) or re.search(r"\brd\s+/s\b", lower):
