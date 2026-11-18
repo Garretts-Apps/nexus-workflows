@@ -7,7 +7,8 @@ Fails (exit 1) when:
 - a command has no `description` frontmatter, no `**Done when**` line, or
   no line saying what it does when run with no arguments, or a skill has no `name`
   and `description`, or a helper agent has no `name`, `description` and
-  `tools`;
+  `tools`, or a helper's body lacks the fixed report shape (Scope, the
+  Severity/Where/What's wrong/Evidence table, Not checked);
 - a skill's `name` does not match its folder, or it has no `**Use when**`
   or `**Done when**` line;
 - prose uses a word from VOICE.md's "don't use" list, or names another
@@ -103,6 +104,10 @@ def check_frontmatter(problems):
         fm = frontmatter(path.read_text(encoding="utf-8"))
         if not fm or not all(fm.get(k) for k in ("name", "description", "tools")):
             problems.append(f"{rel(path)}: needs name, description and tools frontmatter")
+        text = path.read_text(encoding="utf-8")
+        for marker in ("## Report", "Scope:", "| Severity | Where | What's wrong | Evidence |", "Not checked:"):
+            if marker not in text:
+                problems.append(f"{rel(path)}: report shape is missing {marker!r} (every helper returns the same report)")
 
 
 def check_voice(problems):
