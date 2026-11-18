@@ -1,13 +1,18 @@
+---
+name: security-review
+description: Threat-model and review code for command execution, credential, hook, and prompt-injection risk
+---
+
 # Security Review
 
 Use this skill for threat modeling, dependency risk, command execution risk, hook/plugin safety, credential handling, and prompt-injection-sensitive workflows.
 
 ## Workflow
 
-1. Use `grep_files` for risky patterns: secrets, shell execution, network fetches, deserialization, path traversal, auth, permissions.
-2. Use `read_many_files` for security-critical flows.
-3. Use `run_command` for native scanners only if already installed or configured by the repo.
-4. Use `todo_write` to track threat model areas.
+1. Search the tree for risky patterns: secrets, shell execution, network fetches, deserialization, path traversal, auth, permissions.
+2. Read the security-critical flows end to end.
+3. Run native scanners only if the repo already installs or configures them.
+4. Keep a checklist of the threat-model areas and mark each one covered or skipped.
 
 ## Review checklist
 

@@ -26,19 +26,26 @@ def main():
         sys.exit(0)
     lower = cmd.lower()
     risky = [
-        (r"\brm\s+(-[^\s]*\s+)*-[^\s]*r[^\s]*\s+(/|\~|\\\\)", "recursive delete of root or home"),
+        # The target must be the root, home, or a drive itself: rm -rf /tmp/build is fine.
+        (r"\brm\s+(-[^\s]*\s+)*-[^\s]*r[^\s]*\s+(/|~/?|\$home/?|\$\{home\}/?|[a-z]:\\?)\*?(\s|$|[;&|])", "recursive delete of root or home"),
         (r"\bmkfs\b", "filesystem format"),
         (r":\(\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;", "fork bomb pattern"),
-        (r"\bgit\s+push\b[^\n]*\s+--force\b[^\n]*\b(main|master)\b", "force push to default branch"),
         (r">\s*/dev/[sh]d[a-z]", "raw disk write"),
         (r"\bcurl\b[^\n]*\|\s*(ba)?sh\b", "pipe download into shell"),
         (r"\bwget\b[^\n]*\|\s*(ba)?sh\b", "pipe download into shell"),
-        (r"\bshutdown\b", "shutdown command"),
-        (r"\breboot\b", "reboot command"),
+        # Only as a command, so grep reboot logs passes.
+        (r"(^|[;&|(]\s*)(sudo\s+)?shutdown\b", "shutdown command"),
+        (r"(^|[;&|(]\s*)(sudo\s+)?reboot\b", "reboot command"),
     ]
     for pat, label in risky:
         if re.search(pat, lower, re.I):
             deny(f"blocked shell: {label}")
+    for segment in re.split(r"&&|\|\||[;|\n]", lower):
+        if not re.search(r"\bgit\s+push\b", segment):
+            continue
+        forced = re.search(r"\s(--force(?!-with-lease)\b|-[a-z]*f[a-z]*\b|\+\S)", segment)
+        if forced and re.search(r"\b(main|master)\b", segment):
+            deny("blocked shell: force push to default branch")
     if re.search(r"\bformat\s+[a-z]:", lower):
         deny("blocked shell: format drive")
     if re.search(r"\bdel\s+/[fq]\s+", lower) or re.search(r"\brd\s+/s\b", lower):

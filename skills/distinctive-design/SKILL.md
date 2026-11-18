@@ -7,7 +7,7 @@ description: Pick one visual tradition, implement it literally, then prove contr
 
 Use when you design or restyle a web UI, app surface, or terminal layout. Ship one recognizable direction instead of mixing common generated defaults.
 
-Optional research attachments may arrive later. Until then, follow only this file. Describe traditions by layout, typography, color, density, and motion — not by naming living designers, studios, or brands as the authority.
+Describe traditions by layout, typography, color, density, and motion — not by naming living designers, studios, or brands as the authority.
 
 ## 1. List defaults you refuse
 

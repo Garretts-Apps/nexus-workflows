@@ -1,12 +1,12 @@
 # Hook examples (opt-in)
 
-bwn does **not** run these hooks until you copy them into your settings. There is no built-in hook runner in the binary; wire them yourself from `your agent settings file` or a trusted project `.buildwithnexus/settings.json`.
+Nothing here runs until you wire it into your agent's settings. bwn and Claude Code both run hooks from their settings files (`~/.buildwithnexus/settings.json` or a trusted project `.buildwithnexus/settings.json`; `.claude/settings.json`), and both accept the Claude Code tool names used in the matchers below.
 
 ## Setup
 
 1. Copy every `*.py` from `scripts/` into `~/.buildwithnexus/hooks/` (or a path you control).
-2. Merge `settings.fragment.json` into your settings `hooks` object. Point each `command` at your copy of the script.
-3. On Windows, use `python` (or `py -3`) in the command string; on Linux and macOS, `python3` works too. Scripts use only the Python standard library.
+2. Merge `settings.example.json` into your settings `hooks` object. Replace `${KIT_ROOT}/scripts` in each `command` with the directory you copied the scripts to; neither bwn nor Claude Code expands `KIT_ROOT`.
+3. The example uses `python`. On Linux and macOS, where `python` is often missing, change it to `python3`; on Windows, `python` or `py -3`. Scripts use only the Python standard library.
 
 ## What each script does
 
@@ -21,10 +21,10 @@ Exit code `2` means deny (PreToolUse / UserPromptSubmit). PostToolUse hooks only
 
 ## Tests
 
-From the repo root (after copying scripts to a temp dir):
+From the kit root:
 
 ```bash
-echo '{"tool_input":{"command":"rm -rf /"}}' | python3 guard_shell.py; echo exit:$?
+echo '{"tool_input":{"command":"rm -rf /"}}' | python3 scripts/guard_shell.py; echo exit:$?
 ```
 
 A block returns exit 2.

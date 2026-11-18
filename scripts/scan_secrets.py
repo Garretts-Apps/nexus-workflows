@@ -68,6 +68,7 @@ def main():
         if not root.exists():
             print(f"missing: {root}", file=sys.stderr)
             return 2
+        root = root.resolve()
         base = root if root.is_dir() else root.parent
         all_f.extend(scan(base))
     for rel, line, label in sorted(all_f):
