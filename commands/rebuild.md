@@ -10,8 +10,10 @@ No scope given? The subsystem `/entropy` would rank worst: big, churny and hard 
 
 A rebuild is replacing the engine while the car is on the motorway. The old path keeps running until the new one has proven itself on real behavior.
 
+Load the `vertical-slicing` skill and slice the move its way, one real path at a time. This command adds what's special about replacing something that's live.
+
+- **Keep old and new side by side** behind a switch or a routing seam until each slice has run clean.
 - **The existing behavior is the spec,** bugs included, until someone decides otherwise. Pin it with tests before touching anything. Undocumented behavior that callers rely on is still behavior.
-- **Slice vertically** and keep old and new side by side behind a switch or a routing seam. Each slice moves real traffic or real callers, not a layer.
 - **Compare outputs** where you can: run both, diff results, log mismatches. That catches what tests didn't think of.
 - Delete the old path only after its slice has run clean, in a separate commit, so reverting is one step.
 - Keep `spec/` notes short: the behavior contract, the slice plan, what's moved.

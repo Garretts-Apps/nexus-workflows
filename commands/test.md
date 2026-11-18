@@ -8,15 +8,9 @@ Behavior: $ARGUMENTS
 
 No behavior given? Test what the working diff changed; with no diff, run the suite and work the first failure.
 
-A test is a claim about behavior that someone depends on. Test that, not the current shape of the code, or the first refactor will delete your tests and your safety with them.
+Load the `testing` skill and hold every test to it. This command is the one-test version: one behavior, one test, proven.
 
-- **One reason to fail** per test, and a name that says the behavior.
-- **A bug fix gets a test that fails without the fix.** Watching it fail is the only proof it tests anything.
-- **Real collaborators first.** Mock at the edges you don't control: network, clock, randomness. Mocks of your own code mostly test the mock.
-- **Deterministic or it's noise.** Fixed seeds, a frozen clock, no order dependence, no sleeps.
-- **Wide input space?** Parsers, serializers, money, dates: a property-based test finds what three examples won't.
-- **House style wins.** The project's runner and layout beat a better framework nobody runs.
-- Production code stays untouched unless the fix was asked for too.
+- **Pick the narrowest test** that pins the behavior. One good test beats a file of plausible ones.
 - **Ask** only when the expected behavior is a product decision the code doesn't settle. Otherwise pin what the code does today and flag anything that looks wrong.
 
-**Done when** the narrowest command that runs the test is quoted with its output.
+**Done when** the narrowest command that runs the test is quoted with its output, and a fix was shown failing first.
