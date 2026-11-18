@@ -6,7 +6,17 @@ description: Add or run one focused test and quote the result
 
 Behavior: $ARGUMENTS
 
-1. Find the test style already used in this tree.
-2. If you are fixing a bug, show the new test failing before the fix when you can.
-3. Run the narrowest test command. Quote the full command and its output.
-4. Do not change production code unless the user also asked for the fix.
+No behavior given? Test what the working diff changed; with no diff, run the suite and work the first failure.
+
+A test is a claim about behavior that someone depends on. Test that, not the current shape of the code, or the first refactor will delete your tests and your safety with them.
+
+- **One reason to fail** per test, and a name that says the behavior.
+- **A bug fix gets a test that fails without the fix.** Watching it fail is the only proof it tests anything.
+- **Real collaborators first.** Mock at the edges you don't control: network, clock, randomness. Mocks of your own code mostly test the mock.
+- **Deterministic or it's noise.** Fixed seeds, a frozen clock, no order dependence, no sleeps.
+- **Wide input space?** Parsers, serializers, money, dates: a property-based test finds what three examples won't.
+- **House style wins.** The project's runner and layout beat a better framework nobody runs.
+- Production code stays untouched unless the fix was asked for too.
+- **Ask** only when the expected behavior is a product decision the code doesn't settle. Otherwise pin what the code does today and flag anything that looks wrong.
+
+**Done when** the narrowest command that runs the test is quoted with its output.

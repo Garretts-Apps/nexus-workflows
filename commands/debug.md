@@ -6,7 +6,17 @@ description: Reproduce a failure and name the cause before editing
 
 Symptom: $ARGUMENTS
 
-1. Restate the symptom in one line.
-2. Reproduce with a command the project already has. Quote the output.
-3. Name the first wrong line and the evidence.
-4. Do not edit until the user asks, unless they already asked for a fix.
+No symptom given? Take the most recent failure you can find: a failing test, the last CI run, a stack trace in the conversation. Ask only if there is genuinely nothing failing.
+
+A bug you can't reproduce is a rumor. Get it to fail on command first; everything after that is bookkeeping.
+
+- **Reproduce, then shrink.** Find the smallest input, commit and environment that still fail. Intermittent means something varies: time, order, concurrency, data, environment. Find what.
+- **Read the error literally.** All of it, including the part after the first line. The first frame in your own code is usually where to start.
+- **Halve, don't theorize.** Bisect the history (`git bisect`), the input, the config. Three halvings beat an hour of plausible stories.
+- **One change at a time,** and keep a note of what you tried so you don't try it twice.
+- **Cause, not surface.** Where it blew up is rarely where it went wrong. A guard at the surface is a second fix, not the first one.
+- **Suspect the recent and the assumed** before the compiler, the OS or the library. They are occasionally guilty. You are usually guiltier.
+- If you were asked for a diagnosis, deliver a diagnosis. Edit only when a fix was asked for.
+- **Ask** only when the fix is a trade-off (behavior change, data migration, API break). The diagnosis never needs permission.
+
+**Done when** you can name the cause with evidence, the repro is quoted failing (and passing, if you fixed it), and it's clear whether anything was edited.
