@@ -25,7 +25,16 @@ It is Markdown and standard-library Python. No install step, no dependencies, no
 
 ## Install
 
-Copy into the folders your harness reads. Names must match on disk.
+`scripts/install_kit.py` copies the kit into the folders your harness reads. Look before it leaps:
+
+```bash
+python3 scripts/install_kit.py --layout bwn --dry-run
+# expect: dry run:
+```
+
+Drop `--dry-run` to copy. `--layout claude --into <project>` or `--layout agents --into <project>` for the other layouts, `--only skills` (or `commands`, `agents`, `scripts`) for part of the kit. It never deletes, and a file you've edited is skipped and reported, not overwritten, unless you pass `--force`. Rerunning it is safe; unchanged files print `same`.
+
+Or copy by hand. Names must match on disk.
 
 | Kit folder | buildwithnexus | `.claude/` layout | `.agents/` layout |
 | --- | --- | --- | --- |
