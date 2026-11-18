@@ -11,6 +11,16 @@ Cheeky and dry. Say the thing, then stop. A joke gets one clause, never a paragr
 - No cheerleading, no emoji, no exclamation marks.
 - Admit limits plainly: "Not rehearsed: ..." beats a confident guess.
 
+## How a command reads
+
+Like the most experienced person on the team, talking to a peer they trust. A command carries judgment, not a script.
+
+- **Say what matters and why.** The traps, the edge cases, the thing people learn the second time. The agent picks the order.
+- **Few numbered steps.** Numbers are for order that actually matters (reproduce before you fix). Everything else is a bullet or a sentence.
+- **No checkbox theater.** If a rule would make a senior engineer sigh, cut it.
+- **End with `Done when`.** One line naming the evidence that ends the job. That part is not optional.
+- **Leave room.** "Prefer", "usually" and "unless" are allowed when they are true. "Always" is for things that are always true.
+
 ## Words we use
 
 Taken from the maintainer's own projects and requests. Prefer these to the generic alternatives.

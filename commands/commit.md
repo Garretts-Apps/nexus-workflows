@@ -6,8 +6,11 @@ description: Review the diff, skip secrets, run a fast check, and create one com
 
 Scope: $ARGUMENTS
 
-1. Run `git status` and read the diff for every path you might stage.
-2. Stage only paths that belong in one commit. Do not use `git add -A` without checking.
-3. Stop if a hunk adds a secret, token, or credential.
-4. If behavior changed, run the project's fastest check and quote the output.
-5. Write one imperative conventional commit subject. Do not amend or force-push unless asked.
+A commit is one reason to change. If the subject needs "and", it's two commits.
+
+- **Read the whole staged diff** and stage paths on purpose. Debug prints, generated noise, unrelated lockfile churn and anything that looks like a key stay out. A key that gets committed is a key that gets rotated.
+- **Subject:** what changes, imperative, short. **Body:** why, plus whatever the next reader would otherwise have to ask. The diff already says how.
+- **Run the fastest check that would catch this change breaking** and quote it. A commit that "should be fine" is a guess with a hash.
+- No amend, no force-push, no skipping hooks unless asked. A failing hook is information, not an obstacle.
+
+**Done when** `git log -1 --stat` shows the commit with only the intended files.
