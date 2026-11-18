@@ -6,6 +6,8 @@ description: Add or run one focused test and quote the result
 
 Behavior: $ARGUMENTS
 
+No behavior given? Test what the working diff changed; with no diff, run the suite and work the first failure.
+
 A test is a claim about behavior that someone depends on. Test that, not the current shape of the code, or the first refactor will delete your tests and your safety with them.
 
 - **One reason to fail** per test, and a name that says the behavior.
@@ -15,5 +17,6 @@ A test is a claim about behavior that someone depends on. Test that, not the cur
 - **Wide input space?** Parsers, serializers, money, dates: a property-based test finds what three examples won't.
 - **House style wins.** The project's runner and layout beat a better framework nobody runs.
 - Production code stays untouched unless the fix was asked for too.
+- **Ask** only when the expected behavior is a product decision the code doesn't settle. Otherwise pin what the code does today and flag anything that looks wrong.
 
 **Done when** the narrowest command that runs the test is quoted with its output.
