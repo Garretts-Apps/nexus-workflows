@@ -6,8 +6,16 @@ description: Review CI/CD definitions for security, reliability, and least privi
 
 Scope: $ARGUMENTS
 
-1. Detect platforms present: Azure Pipelines (`azure-pipelines.yml`, `*.yml` templates) and/or GitHub Actions (`.github/workflows/`).
-2. For each platform, review: secrets in YAML, pinned action/task versions, `pull_request_target` and fork risks, OIDC vs long-lived credentials, permissions blocks, environments and approvals, test-before-deploy ordering, timeouts, caching, concurrency, and required checks.
-3. Report findings by severity with file path and line. Propose concrete YAML fixes when asked.
-4. Delegate a large diff to the read-only `pipeline-reviewer` helper when useful.
-5. Do not rename or apply service connections, variable groups, or org secrets.
+No scope given? Every pipeline definition in the repo: `.github/workflows/`, `azure-pipelines.yml` and its templates, and anything they include. Say what you found.
+
+A pipeline holds the keys to production and runs code from pull requests. Review it like it does.
+
+- **Untrusted code with trusted credentials** is the big one: `pull_request_target` or fork builds that check out PR code, secrets exposed to steps that run it, caches shared between them.
+- **Least privilege:** explicit `permissions`, short-lived OIDC over stored secrets, environments with approvals in front of deploys.
+- **Pinning:** third-party actions and tasks pinned to a commit, not a moving tag.
+- **Injection:** untrusted event fields (titles, branch names) interpolated straight into shell.
+- **Reliability:** tests before deploy, timeouts, concurrency groups, retries that hide real failures, caches keyed so they can't poison a release.
+- Rank findings blocker, should-fix, note, each with `path:line` and a minimal YAML fix. Large diffs can go to the read-only `pipeline-reviewer` helper.
+- Service connections, variable groups and org secrets are outward-facing: **ask** before changing any.
+
+**Done when** each finding has a location, the risk in one line and a proposed fix, and you've named what you couldn't see (org settings, branch protection).
