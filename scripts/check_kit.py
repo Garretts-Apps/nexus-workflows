@@ -73,6 +73,12 @@ def check_frontmatter(problems):
         fm = frontmatter(path.read_text(encoding="utf-8"))
         if not fm or not fm.get("description"):
             problems.append(f"{rel(path)}: no description frontmatter")
+        # Harnesses replace $1..$9 with positional arguments, so "$40" in
+        # prose turns into the fourth argument followed by a zero.
+        body = path.read_text(encoding="utf-8")
+        for i, line in enumerate(body.splitlines(), 1):
+            if re.search(r"\$[1-9]", line) and "$ARGUMENTS" not in line:
+                problems.append(f"{rel(path)}:{i}: `$<digit>` is a positional placeholder; spell the amount out")
     for path in sorted((ROOT / "skills").glob("*/SKILL.md")):
         fm = frontmatter(path.read_text(encoding="utf-8"))
         if not fm or not fm.get("name") or not fm.get("description"):

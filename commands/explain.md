@@ -6,11 +6,19 @@ description: Explain behavior in plain language with a fixed writing shape
 
 Subject: $ARGUMENTS
 
-Use this shape in the reply:
+No subject given? Explain whatever the working diff changes; with no diff, how a request travels through the main entry point.
 
-1. **What it is** - one sentence, no jargon.
-2. **How it runs** - numbered steps in execution order.
-3. **What can go wrong** - two or three concrete failure modes.
-4. **Where to look next** - paths or commands only, no hand-waving.
+Read the code before you write a word. An explanation of what the code probably does is fiction.
 
-Read the code before writing. Do not change files unless asked.
+Shape the reply like this:
+
+1. **What it is** in one sentence a newcomer can follow.
+2. **How it runs,** in execution order, naming the files and functions as you go.
+3. **What can go wrong:** the two or three failure modes that actually happen, not every theoretical one.
+4. **Where to look next:** paths and commands, no hand-waving.
+
+- Match depth to the question. "What does this do?" doesn't need the architecture tour.
+- Say where you're unsure and what would settle it.
+- Read-only. No edits unless asked.
+
+**Done when** every claim in the explanation points at a file, function or command.
