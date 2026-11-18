@@ -1,49 +1,62 @@
 # nexus-workflows
 
-Portable Markdown **commands**, **skills**, **agents**, optional **hook scripts**, and **CI workflow examples** for coding agents. Nothing here assumes one vendor runtime.
+Commands, skills and helpers for a coding agent that would otherwise say "done" without running anything.
 
-## Canonical layout
+It is Markdown and standard-library Python. No install step, no dependencies, no account. Copy the files you want into your harness and delete the rest; nothing here will notice.
 
-| Path | Format |
+| Path | What it is |
 | --- | --- |
-| `commands/` | One file per slash command: `<name>.md` with optional YAML frontmatter |
-| `skills/` | `<name>/SKILL.md` (Agent Skills shape) or flat skill bodies |
-| `agents/` | `<name>.md` helper definitions (`name`, `description`, `tools`, `read_only`) |
-| `scripts/` | Python helpers (stdlib only; hooks and scanners) |
-| `hooks/settings.example.json` | Example hook wiring; paths are placeholders you replace |
-| `workflows-examples/` | Optional GitHub Actions samples |
-| `AGENTS.md` | Repository-level instructions many agents read automatically |
+| `commands/` | 46 slash commands. `commit.md` is `/commit`. The body is the prompt; `description` is what the popup shows. |
+| `skills/` | 8 skills, one `<name>/SKILL.md` each, with `name` and `description` frontmatter. |
+| `agents/` | 4 read-only helpers: `reviewer`, `security-check`, `pipeline-reviewer`, `debugger`. |
+| `scripts/` | Guards and scanners. Python 3, stdlib only, Linux, macOS and Windows. |
+| `hooks/` | Example wiring for the guards. Off until you turn it on. |
+| `workflows-examples/` | GitHub Actions to copy: secret scan, dependency audit, CodeQL. |
+| `AGENTS.md` | House rules for any agent working in a repo that uses the kit. |
+| `VOICE.md` | How the kit talks, and the words it won't use. |
+
+## What it insists on
+
+- **Evidence or it didn't happen.** Commands that change behavior end with a command and its quoted output. `verify-before-done` is the skill for agents that would rather not.
+- **Reproduce first.** `/debug` names the first wrong line before anyone edits it.
+- **Small commits.** One concern each, conventional subject, no amend or force-push unless asked.
+- **Read-only by default.** Helpers review; they don't fix. The parent agent decides.
+- **Admit what wasn't run.** "Not rehearsed" is a fine sentence. A confident guess is not.
 
 ## Install
 
-Copy only what you need. Names must match on disk (e.g. `commit.md` → `/commit`).
+Copy into the folders your harness reads. Names must match on disk.
 
-### buildwithnexus (bwn)
+| Kit folder | buildwithnexus | `.claude/` layout | `.agents/` layout |
+| --- | --- | --- | --- |
+| `commands/` | `~/.buildwithnexus/commands/` | `.claude/commands/` | your runner's command folder |
+| `skills/` | `~/.buildwithnexus/skills/` | `.claude/skills/` | `.agents/skills/` |
+| `agents/` | `~/.buildwithnexus/agents/` | `.claude/agents/` | your runner's helper folder |
+| `scripts/` | `~/.buildwithnexus/hooks/` | `.claude/scripts/` | anywhere on `PATH` |
+| `AGENTS.md` | repo root | repo root | repo root |
 
-bwn bundles `/test`, `/handoff`, `/changelog`, `/design-pass`, `/deslop` and the `distinctive-design` and `deslop` skills (on bwn's main branch after 0.21.0). Its own `/commit`, `/review`, `/pr` and `/debug` run before any command file of those names, so copies of this kit's versions run only headless (`bwn run '/commit'`). To override or extend, copy into `~/.buildwithnexus/commands/`, `~/.buildwithnexus/skills/`, or `~/.buildwithnexus/agents/`. Hook scripts: `~/.buildwithnexus/hooks/` plus `hooks` in `~/.buildwithnexus/settings.json`.
+A project folder (`.buildwithnexus/`, `.claude/`) works too, once the harness trusts the project.
 
-### Claude Code
+buildwithnexus already bundles `/test`, `/handoff`, `/changelog`, `/design-pass` and `/deslop`, plus the `distinctive-design` and `deslop` skills (main, after 0.21.0). A file of the same name in your commands folder replaces the bundled one. bwn's own `/commit`, `/review`, `/pr` and `/debug` answer before any file, so the kit's versions of those run headless only: `bwn run '/commit'`.
 
-Copy into the project or home tree: `.claude/commands/`, `.claude/skills/`, `.claude/agents/`, and `.claude/scripts/`. Merge `hooks/settings.example.json` into `.claude/settings.json` and point commands at your script directory.
-
-### Cursor
-
-Project rules: merge `AGENTS.md` at the repo root (or `.cursor/rules` if you split it). Commands: `.cursor/commands/` if your setup supports markdown commands, else keep under `.claude/commands/` (Cursor reads both in many setups). Skills: `.cursor/skills/` or `.agents/skills/` using the same `SKILL.md` folders.
-
-### Codex / generic AGENTS.md hosts
-
-Use root `AGENTS.md`. Place skills under `.agents/skills/<name>/SKILL.md`. Invoke commands by pasting the markdown body or wiring your runner's slash-command folder to `commands/`.
-
-### Other CLIs
-
-Map `commands/` → the tool's slash-command directory, `skills/` → the tool's skill directory, `agents/` → subagent or helper directory, `scripts/` → a path on `PATH` or referenced by hook JSON.
+Hooks: see `hooks/README.md`.
 
 ## Scanners
 
-From the kit root:
+From the kit root, or point them at any tree:
 
 ```bash
-python3 scripts/scan_slop.py --report .
-python3 scripts/scan_secrets.py --report .
-python3 scripts/measure_entropy.py --report .
+python3 scripts/scan_slop.py --report .      # invisible Unicode, smart quotes, stray dashes
+python3 scripts/scan_secrets.py --report .   # key shapes and labeled secrets
+python3 scripts/measure_entropy.py --report . # big files, repeated blocks, churn
 ```
+
+`scan_slop.py --ci` exits 1 only on characters you can't see. The other two report and exit 0.
+
+## Checking the kit
+
+```bash
+python3 scripts/check_kit.py
+```
+
+Frontmatter, voice, every backticked path and slash command resolving, every script compiling, and the guard tests in `tests/`. CI runs it on Linux, macOS and Windows. It prints `kit ok` or a list, which is the only mood it has.
