@@ -18,7 +18,7 @@ GROUPS = [
     ("Every day", ["test", "review", "debug", "commit", "pr", "security-review", "explain", "handoff"]),
     ("Before you build", ["brainstorm", "grill", "discovery", "design-brief", "sdd", "feature", "user-story", "bdd", "test-plan", "questionnaire"]),
     ("Decisions on record", ["adr", "rfc", "migration-plan", "rebuild"]),
-    ("Tests and quality", ["coverage", "testgen", "playwright", "journey", "load-test", "entropy", "deslop", "design-pass", "rehearse"]),
+    ("Tests and quality", ["coverage", "testgen", "playwright", "journey", "load-test", "entropy", "deslop", "design-pass", "rehearse", "lean"]),
     ("Security and supply chain", ["secrets-scan", "deps-audit", "supply-chain", "sbom", "threat-model", "pipeline-review", "soc2"]),
     ("Docs and operations", ["api-docs", "onboard", "runbook", "changelog", "bug", "retro"]),
     ("Adding your own", ["new-command", "new-skill", "new-agent"]),

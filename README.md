@@ -6,8 +6,8 @@ It is Markdown and standard-library Python. No install step, no dependencies, no
 
 | Path | What it is |
 | --- | --- |
-| `commands/` | 47 slash commands. `commit.md` is `/commit`. The body is the prompt; `description` is what the popup shows. |
-| `skills/` | 9 skills, one `<name>/SKILL.md` each, with `name` and `description` frontmatter. |
+| `commands/` | 48 slash commands. `commit.md` is `/commit`. The body is the prompt; `description` is what the popup shows. |
+| `skills/` | 10 skills, one `<name>/SKILL.md` each, with `name` and `description` frontmatter. |
 | `agents/` | 4 read-only helpers: `reviewer`, `security-check`, `pipeline-reviewer`, `debugger`. |
 | `scripts/` | Guards and scanners. Python 3, stdlib only, Linux, macOS and Windows. |
 | `hooks/` | Example wiring for the guards. Off until you turn it on. |

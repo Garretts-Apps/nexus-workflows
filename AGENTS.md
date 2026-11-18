@@ -16,6 +16,7 @@ House rules for any agent working in a repo that uses this kit. Short on purpose
 | When | Load |
 | --- | --- |
 | Writing or judging tests | `testing` |
+| A function whose "always" and "never" matter more than its examples | `lean` |
 | About to say done, fixed or passing | `verify-before-done` |
 | Planning or building a feature | `vertical-slicing` |
 | Handing the maintainer commands to run on their machine | `rehearse` |
