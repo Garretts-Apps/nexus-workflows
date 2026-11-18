@@ -4,7 +4,7 @@ import argparse
 import hashlib
 import subprocess
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 SKIP_DIRS = {
@@ -46,6 +46,11 @@ TEXT_SUFFIX = {
 LINE_BLOCK = 5
 MIN_BLOCK_LEN = 40
 LARGE_FILE = 400
+# Copies here are on purpose (fixtures mirror real files) or generated
+# (data dumps), so they are not duplication worth paying down.
+DUP_SKIP_DIRS = {"fixtures", "test-fixtures", "__fixtures__", "testdata", "snapshots", "__snapshots__"}
+DUP_SKIP_SUFFIX = {".json"}
+DUP_SHOWN = 25  # the longest copies; the rest are counted, not listed
 
 
 def iter_sources(root: Path):
@@ -89,24 +94,44 @@ def large_files(root: Path):
 
 
 def duplicate_blocks(root: Path):
-    seen = {}
-    dups = []
+    """One finding per copied run, not per matching window.
+
+    A 20-line copy matches 16 overlapping 5-line windows; they are joined
+    into one run with both line ranges, and runs are ranked by length.
+    """
+    seen = {}  # window digest -> (file, first line) where it first appeared
+    runs = []
     for path in iter_sources(root):
+        if path.suffix.lower() in DUP_SKIP_SUFFIX or DUP_SKIP_DIRS & set(path.relative_to(root).parts):
+            continue
         lines = read_lines(path)
         rel = path.relative_to(root).as_posix()
+        hits = []  # (line here, other file, line there), 1-based
         for i in range(len(lines) - LINE_BLOCK + 1):
             block = [ln.strip() for ln in lines[i : i + LINE_BLOCK]]
-            if not any(block):
-                continue
             text = "\n".join(block)
             if len(text) < MIN_BLOCK_LEN:
                 continue
             digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
-            if digest in seen and seen[digest] != rel:
-                dups.append(("DUP_BLOCK", rel, f"{seen[digest]} vs {rel}:{i + 1}"))
+            first = seen.get(digest)
+            if first and first[0] != rel:
+                hits.append((i + 1, first[0], first[1]))
+            elif not first:
+                seen[digest] = (rel, i + 1)
+        for here, other, there in hits:
+            last = runs[-1] if runs else None
+            if last and last[0] == rel and last[2] == other and here == last[1] + last[4] and there == last[3] + last[4]:
+                last[4] += 1
             else:
-                seen[digest] = rel
-    return dups
+                runs.append([rel, here, other, there, 1])
+    runs.sort(key=lambda r: (-r[4], r[0], r[1]))
+    findings = []
+    for rel, here, other, there, windows in runs[:DUP_SHOWN]:
+        size = windows + LINE_BLOCK - 1
+        findings.append(("DUP_BLOCK", rel, f"{rel}:{here}-{here + size - 1} = {other}:{there}-{there + size - 1} ({size} lines)"))
+    if len(runs) > DUP_SHOWN:
+        findings.append(("DUP_BLOCK", "...", f"{len(runs) - DUP_SHOWN} shorter copies not listed"))
+    return findings
 
 
 def git_churn(root: Path, limit: int = 15):
@@ -161,7 +186,7 @@ def main():
             return (0, -int(detail), where)
         if kind == "GIT_CHURN":
             return (1, -int(detail), where)
-        return (2, 0, where)
+        return (2, 0, "")  # already ranked longest first
 
     for kind, where, detail in sorted(all_findings, key=sort_key):
         print(f"{kind}\t{where}\t{detail}")
