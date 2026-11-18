@@ -6,10 +6,15 @@ description: Measure entropy hotspots and apply small verified cleanups
 
 Scope: $ARGUMENTS
 
-1. **Measure** - Run `python scripts/measure_entropy.py --report` from a source checkout (or copy the script locally). It ranks large files, repeated line blocks, and recent git churn. Skip vendor and build trees.
-2. **Read** - Add manual review for dead exports, unused imports, and parallel patterns the script cannot see. Cite paths you opened.
-3. **Rank** - Merge script output with review into blocker / should-fix / note. Prefer behavior-preserving reductions (dedupe helpers, drop dead code, simplify wrappers).
-4. **Plan or fix** - Default: report only. If the user asked to clean up, change one ranked item at a time, run the project tests after each, and quote output.
-5. **Stop** - Revert on test failure. No wide refactors in one commit.
+No scope given? The whole tree, minus dependencies and build output.
 
-For replacing an old implementation with a spec-driven migration, use `/rebuild` instead.
+Entropy is code that costs more to change than it should. Measure first, because the file everyone complains about is rarely the one that hurts most.
+
+- **Measure** with `python3 scripts/measure_entropy.py --report <path>`: big files, repeated blocks, churn. Churn times size is where the pain is.
+- **Then read** what the script can't see: dead exports, unused flags, two helpers that do the same thing, abstractions with one caller.
+- **Prefer deletion to rearrangement.** Removing dead code is the only refactor with no regression risk in the deleted part.
+- **Default is report only.** If cleanup was asked for: one item per commit, behavior unchanged, tests run after each, revert on red.
+- Replacing a whole subsystem is `/rebuild`, not this.
+- **Ask** before touching public interfaces or anything another repo might import.
+
+**Done when** there's a ranked list with file evidence, and any cleanup commits each have a quoted green test run.
