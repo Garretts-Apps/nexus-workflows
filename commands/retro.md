@@ -6,7 +6,14 @@ description: Look back on the session and capture one rule to keep
 
 Notes: $ARGUMENTS
 
-1. List what worked (with evidence: command output or paths touched).
-2. List what did not work or was wasted motion.
-3. Write one rule to keep next time (imperative, testable).
-4. Keep the whole reply under one screen. No blame, no names.
+No notes given? Use the session itself: what was asked, what happened, where time went.
+
+A retro is worth one rule. Not ten, not a feelings report. One rule that would have saved real time.
+
+- **What worked,** with evidence: the command, the output, the commit.
+- **What didn't:** wasted motion, a wrong assumption, a guess that should have been a check, a question that should have been asked sooner, or one that didn't need asking.
+- **The rule:** imperative, specific, testable next time. "Run the field cell before handing over a command block" beats "be more careful".
+- Say where the rule should live (a command, a skill, `AGENTS.md`) and offer the edit. Don't make it without a yes.
+- No blame, no names. One screen.
+
+**Done when** there's one rule, a place for it, and the evidence behind it.
