@@ -1,26 +1,29 @@
 ---
 name: agent-orchestration
-description: Split work across helpers with narrow prompts and merged results
+description: Use when splitting work across helpers: who gets what, what they return, and how to trust it
 ---
 
 # Agent orchestration
 
-Use this when delegating to helpers or subagents.
+**Use when** a job splits into parts that don't depend on each other, or one part needs a fresh pair of eyes that hasn't read your conclusion.
 
-## Splitting work
+Delegation saves time only if the handoff is cheap and the result is checkable. Most of the cost is in the brief and the merge, not the work.
 
-1. One helper gets one outcome. Put files, constraints, and done-criteria in the prompt.
-2. Prefer read-only helpers for review, research, and security passes.
-3. Cap parallel helpers at what the runtime allows. Independent read-only tasks first; writers run serially.
-4. Parent agent merges outputs: dedupe, resolve conflicts, cite which helper found each item.
+## Splitting
 
-## Prompt shape
+- **Split by independence, not by size.** Two parts that need each other's answers belong to one helper, or to you.
+- **One outcome per helper.** Give it the goal, the paths in scope, what's off limits, and what done looks like. It knows only what you wrote.
+- **Read-only helpers run in parallel; writers run one at a time.** Two helpers editing the same tree is a merge conflict with extra steps.
+- Don't hand a helper your hypothesis to confirm. It will.
 
-- Goal (one line)
-- Allowed tools or "read only"
-- Paths in scope and paths off limits
-- Output format (bullets, table, or patch plan)
+## What comes back
 
-## Failures
+- **Fix the report shape** in the brief: findings with `path:line`, severity, and what wasn't checked. Prose comes back as prose.
+- **Verify before you repeat it.** A helper's finding is a lead until you've opened the file. Mistakes arrive in the same confident tone as facts.
+- Merge: dedupe, resolve contradictions by reading the code, and say which helper found what.
 
-If a helper errors or times out, say what was not checked. Do not pretend full coverage.
+## When it goes wrong
+
+A helper that errors or times out leaves a hole. Say what wasn't covered. Don't round a partial result up to "checked everything".
+
+**Done when** every helper's result is merged or marked missing, and each claim you pass on has been checked against the source.

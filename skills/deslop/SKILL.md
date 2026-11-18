@@ -1,11 +1,13 @@
 ---
 name: deslop
-description: Find generated-code debris, rank it, and clean it up in small commits.
+description: Use after heavy generated edits: find the debris (invisible Unicode, narrating comments, dead code, stock prose), rank it, and clean it up in small commits
 ---
 
 # Deslop
 
-Run after heavy agent-generated edits. Remove residue that does not change behavior; keep edits that might be deliberate.
+**Use when** a lot of code or prose was just generated, or something reads like nobody in particular wrote it.
+
+Remove residue that doesn't change behavior. When an edit might be deliberate, keep it and say so.
 
 ## 1. Scope and mode
 
@@ -41,3 +43,5 @@ End with a Kept list. In `--report` and `--ci`, stop after the report.
 When edits are allowed: unicode, comments, repo artifacts, formatting, writing, code smells, design. One commit per category with subject `deslop: <category>`. Run the project's tests after each commit and quote the result. Do not amend or push.
 
 When the tree has UI, read `distinctive-design` and report generated-default patterns. Fix design only in a design commit for the screen in scope.
+
+**Done when** the report is out, each fix category is its own commit with a quoted test run, and the Kept list is there.

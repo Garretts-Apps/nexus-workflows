@@ -1,26 +1,36 @@
 ---
 name: api-design
-description: Shape stable public APIs with clear errors and versioning
+description: Use when adding or changing a public interface (HTTP, RPC or library exports): contracts, errors, versioning, limits
 ---
 
 # API design
 
-Use this when adding or changing a public API (HTTP, RPC, or library exports).
+**Use when** something outside this code will call it: an HTTP route, an RPC method, a library export, a CLI flag someone scripts against.
 
-## Contracts
+An API is a promise you can't take back quietly. Design for the caller who will depend on your mistakes.
 
-1. Name resources and actions in nouns and verbs the caller already uses in the domain.
-2. Return errors as machine-readable codes plus a short human message. Never only HTTP status.
-3. Version breaking changes (path prefix, header, or major version). Document deprecations with a removal date.
-4. Pagination: cursor or offset with a hard max page size. Include total only when cheap.
-5. Idempotent writes: accept a client idempotency key or natural idempotency via PUT semantics.
+## The contract
 
-## Security defaults
+- **Name things in the caller's language,** not your table names. Nouns for resources, verbs only when it really is an action.
+- **Errors are part of the interface:** a stable machine-readable code, a human message, and enough detail to fix the request. Never only a status code. Never a stack trace.
+- **Be strict in what you accept** at first. Rejecting unknown fields is easy to relax later; accepting junk is impossible to tighten.
+- **Idempotency for writes** that might be retried: an idempotency key, or PUT-style semantics. Networks retry whether you planned for it or not.
+- **Pagination with a hard maximum,** cursor-based when data changes underneath. Totals only when they're cheap.
+- **Time and money:** ISO 8601 with offsets, amounts as integers in minor units or decimals as strings, currency always named.
 
-- Auth required unless explicitly public. Fail closed.
-- Validate input at the boundary; reject unknown fields when the schema is strict.
-- Never echo secrets in errors or logs.
+## Change
+
+- **Additive changes are free; everything else is a version.** Removing a field, tightening validation, changing a default and changing an error code all break someone.
+- Deprecate with a date and a replacement, and say so in the response, not just the docs.
+
+## Defaults that matter
+
+- Auth required unless deliberately public. Authorization checked per object, not per route.
+- Rate limits, size limits and timeouts documented and enforced.
+- Secrets never echoed back, in errors or logs.
 
 ## Documentation
 
-Each public operation needs: inputs, outputs, auth, rate limits, and one worked example.
+Every operation: inputs, outputs, errors, auth, limits, and one example that actually works. `/api-docs` writes it from the code.
+
+**Done when** the contract covers errors and limits, the change is additive or versioned, and an example request has been run.

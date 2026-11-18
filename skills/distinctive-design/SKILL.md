@@ -1,11 +1,11 @@
 ---
 name: distinctive-design
-description: Pick one visual tradition, implement it literally, then prove contrast and accessibility on a captured screen.
+description: Use when designing or restyling a UI or terminal layout: pick one visual tradition, build it literally, prove contrast and access on a real capture
 ---
 
 # Distinctive design
 
-Use when you design or restyle a web UI, app surface, or terminal layout. Ship one recognizable direction instead of mixing common generated defaults.
+**Use when** you design or restyle a web UI, app surface, or terminal layout. Ship one recognizable direction instead of mixing common generated defaults.
 
 Describe traditions by layout, typography, color, density, and motion — not by naming living designers, studios, or brands as the authority.
 
@@ -63,4 +63,4 @@ Never sign off from prose alone.
 - Accessibility: web gets names, focus, keyboard path; terminal duplicates color meaning in text or position.
 - Compare the capture to section 1; if a cliché remains, revise the concept and rebuild — do not decorate over it.
 
-Done when concept, capture, contrast table, and access notes are all attached to the reply.
+**Done when** the concept, the capture, the contrast table and the access notes are all in the reply.

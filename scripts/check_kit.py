@@ -8,7 +8,8 @@ Fails (exit 1) when:
   no line saying what it does when run with no arguments, or a skill has no `name`
   and `description`, or a helper agent has no `name`, `description` and
   `tools`;
-- a skill's `name` does not match its folder;
+- a skill's `name` does not match its folder, or it has no `**Use when**`
+  or `**Done when**` line;
 - prose uses a word from VOICE.md's "don't use" list, or names another
   tool as a reference point;
 - a backticked kit path (`scripts/x.py`, `skills/x/SKILL.md`, `/command`)
@@ -91,6 +92,10 @@ def check_frontmatter(problems):
             problems.append(f"{rel(path)}: needs name and description frontmatter")
         elif fm["name"] != path.parent.name:
             problems.append(f"{rel(path)}: name {fm['name']!r} is not the folder name {path.parent.name!r}")
+        text = path.read_text(encoding="utf-8")
+        for marker in ("**Use when**", "**Done when**"):
+            if marker not in text:
+                problems.append(f"{rel(path)}: no {marker} line")
     for path in sorted((ROOT / "agents").glob("*.md")):
         fm = frontmatter(path.read_text(encoding="utf-8"))
         if not fm or not all(fm.get(k) for k in ("name", "description", "tools")):

@@ -1,22 +1,25 @@
 ---
 name: vertical-slicing
-description: Deliver one user-visible slice end to end before widening scope
+description: Use when planning or building a feature: ship the thinnest path from input to visible result first
 ---
 
 # Vertical slicing
 
-Use this when planning or implementing a feature. A slice is the thinnest path from input to outcome a user can try.
+**Use when** planning or building anything bigger than one sitting, or when a plan starts with "first we'll build the layer for".
 
-## Rules
+A slice is the thinnest path from something a person does to something they can see. It proves the idea and the plumbing at the same time, which is the point.
 
-1. Name the user outcome in one line. If you cannot demo it, the slice is too wide.
-2. Pick one entry point (CLI flag, route, screen). Do not add a second until the first works.
-3. Implement in order: data model or contract, core logic, persistence or IO, then UI or message.
-4. Ship with one test that proves the outcome. Widen only after that test is green.
-5. Defer cross-cutting work (logging polish, admin UI, bulk export) to a later slice list.
+- **Name the outcome** in one line someone could demo. If you can't demo it, the slice is too wide or not a slice.
+- **One entry point first.** One route, one flag, one screen. The second one waits until the first works.
+- **Cut through every layer, thinly:** contract, logic, storage, interface. Hardcode what you must; the next slice replaces it.
+- **Riskiest slice first.** The integration you're unsure of, the performance you're guessing at, the user flow nobody has tried.
+- **Each slice ships with the test that proves its outcome,** and is green before the next starts.
+- Defer the cross-cutting polish (admin screens, bulk tools, fancy logging) to a list. That list is allowed to stay a list.
 
-## Anti-patterns
+## Smells
 
-- Horizontal layers with nothing callable at the end.
-- Feature flags that hide half-built flows with no test.
-- Shared abstractions before two call sites exist.
+- Layers with nothing callable at the end ("the schema is done").
+- Feature flags hiding half-built flows with no test.
+- A shared abstraction before there are two call sites.
+
+**Done when** the slice can be demoed end to end and its outcome test is green.
