@@ -10,10 +10,11 @@ No goal given? The feature the branch or conversation is heading toward. Say whi
 
 Spec first means writing down what "working" looks like before anyone falls in love with an implementation.
 
+Load the `vertical-slicing` skill for how to cut the work; this command adds the spec and the tests that come before it.
+
 - **If the goal is fuzzy, stop** and run `/discovery` or `/brainstorm`. A spec for a vague goal is fiction with numbered headings.
 - **The spec** (`spec/<slug>.md`): the behavior in plain words, numbered acceptance checks someone could run, and an out-of-scope list.
 - **Tests from the checks,** failing, before production code. IDs match: `AC-3` in the spec is `AC-3` in the test name.
-- **Slice vertically** (`spec/<slug>-plan.md`): each slice is a thin path to something you can demo. Riskiest first.
 - Build one slice at a time, tests green after each. When behavior drifts, update the spec in the same commit.
 - Unknowns are `TBD` with an owner. Never invent a stakeholder or a date.
 - **Ask** for review between spec and code, unless the maintainer already said go.
