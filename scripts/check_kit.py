@@ -4,7 +4,8 @@
     python3 scripts/check_kit.py
 
 Fails (exit 1) when:
-- a command has no `description` frontmatter, or a skill has no `name`
+- a command has no `description` frontmatter, no `**Done when**` line, or
+  no line saying what it does when run with no arguments, or a skill has no `name`
   and `description`, or a helper agent has no `name`, `description` and
   `tools`;
 - a skill's `name` does not match its folder;
@@ -73,6 +74,11 @@ def check_frontmatter(problems):
         fm = frontmatter(path.read_text(encoding="utf-8"))
         if not fm or not fm.get("description"):
             problems.append(f"{rel(path)}: no description frontmatter")
+        text = path.read_text(encoding="utf-8")
+        if "**Done when**" not in text:
+            problems.append(f"{rel(path)}: no **Done when** line (VOICE.md: How a command reads)")
+        if "given?" not in text:
+            problems.append(f"{rel(path)}: no line saying what it does with no arguments (\"No X given? ...\")")
         # Harnesses replace $1..$9 with positional arguments, so "$40" in
         # prose turns into the fourth argument followed by a zero.
         body = path.read_text(encoding="utf-8")

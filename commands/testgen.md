@@ -6,7 +6,15 @@ description: Generate a focused unit test file for one module
 
 Target: $ARGUMENTS
 
-1. Read the module and tests beside it. Match style and runner.
-2. Add tests for behavior that is untested, not for coverage theater.
-3. Show the test failing first when you are fixing a bug.
-4. Run the narrowest test command and quote output.
+No target given? The module the working diff changed most, else the most-used module with the thinnest tests. Say which.
+
+Generated tests are only worth keeping if they'd catch a real regression. A file of assertions that restate the implementation is a liability with good coverage numbers.
+
+- **Read the module and its callers.** Test the contract callers depend on, not private helpers.
+- Cover the edges the module actually handles: empty, boundary, invalid, error paths. Skip permutations that exercise the same branch.
+- **Each test should fail if the behavior it names broke.** If you can't say what would make it fail, delete it.
+- Match the runner, file layout and fixtures beside it.
+- Fixing a bug? Show the test failing before the fix.
+- **Ask** only if the intended behavior conflicts with what the code does.
+
+**Done when** the narrowest command that runs the new file is quoted with its output, and each test's name says what it protects.
