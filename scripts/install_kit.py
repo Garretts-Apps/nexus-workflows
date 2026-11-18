@@ -11,6 +11,11 @@ Layouts:
   claude  everything under <into>/.claude/  (scripts/ as .claude/scripts)
   agents  everything under <into>/.agents/
 
+--hooks (bwn only) also puts the guards where bwn finds them on its own,
+one event folder each: hooks/PreToolUse/guard_shell.py, guard_writes.py,
+hooks/UserPromptSubmit/screen_prompt.py, hooks/PostToolUse/strip_invisible.py.
+That turns them on; leave it off and nothing runs until you wire it.
+
 It never deletes, and it never replaces a file you changed: a target that
 differs from the kit is skipped and reported unless you pass --force.
 Prints one line per file (copy, same, skip, replace) and a count.
@@ -23,6 +28,13 @@ from pathlib import Path
 
 KIT = Path(__file__).resolve().parent.parent
 PARTS = ("commands", "skills", "agents", "scripts")
+# bwn runs any script in ~/.buildwithnexus/hooks/<Event>/ for every tool call.
+BWN_EVENTS = {
+    "guard_shell.py": "PreToolUse",
+    "guard_writes.py": "PreToolUse",
+    "screen_prompt.py": "UserPromptSubmit",
+    "strip_invisible.py": "PostToolUse",
+}
 
 
 def destinations(layout, into):
@@ -43,19 +55,22 @@ def sources(part):
         yield path, path.relative_to(base)
 
 
-def plan(layout, into, only, force):
+def plan(layout, into, only, force, hooks=False):
+    if hooks:
+        for name, event in BWN_EVENTS.items():
+            yield decide(KIT / "scripts" / name, into / "hooks" / event / name, force)
     for part in only:
         target_root = destinations(layout, into)[part]
         for src, rel in sources(part):
-            dst = target_root / rel
-            if not dst.exists():
-                yield "copy", src, dst
-            elif filecmp.cmp(src, dst, shallow=False):
-                yield "same", src, dst
-            elif force:
-                yield "replace", src, dst
-            else:
-                yield "skip", src, dst
+            yield decide(src, target_root / rel, force)
+
+
+def decide(src, dst, force):
+    if not dst.exists():
+        return "copy", src, dst
+    if filecmp.cmp(src, dst, shallow=False):
+        return "same", src, dst
+    return ("replace" if force else "skip"), src, dst
 
 
 def main(argv):
@@ -65,6 +80,7 @@ def main(argv):
     parser.add_argument("--only", default=",".join(PARTS), help="comma list of: " + ", ".join(PARTS))
     parser.add_argument("--dry-run", action="store_true", help="print the plan, write nothing")
     parser.add_argument("--force", action="store_true", help="replace files that differ from the kit")
+    parser.add_argument("--hooks", action="store_true", help="bwn only: also turn the guards on in hooks/<Event>/")
     args = parser.parse_args(argv)
 
     only = [p.strip() for p in args.only.split(",") if p.strip()]
@@ -75,10 +91,12 @@ def main(argv):
         if args.layout != "bwn":
             parser.error("--into is required for this layout")
         args.into = Path.home() / ".buildwithnexus"
+    if args.hooks and args.layout != "bwn":
+        parser.error("--hooks is for --layout bwn; other layouts wire hooks in their settings file")
     into = args.into.expanduser().resolve()
 
     counts = {"copy": 0, "same": 0, "skip": 0, "replace": 0}
-    for action, src, dst in plan(args.layout, into, only, args.force):
+    for action, src, dst in plan(args.layout, into, only, args.force, args.hooks):
         counts[action] += 1
         note = "  (differs from the kit; --force replaces it)" if action == "skip" else ""
         print(f"{action:8} {dst}{note}")

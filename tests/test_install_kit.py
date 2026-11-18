@@ -55,6 +55,17 @@ class InstallKit(unittest.TestCase):
             run("--layout", "agents", "--into", tmp, "--only", "commands", "--force")
             self.assertNotEqual(mine.read_text(encoding="utf-8"), "my own /test\n")
 
+    def test_bwn_hooks_land_in_event_folders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run("--layout", "bwn", "--into", tmp, "--only", "skills", "--hooks")
+            got = files(tmp)
+            self.assertIn("hooks/PreToolUse/guard_shell.py", got)
+            self.assertIn("hooks/PostToolUse/strip_invisible.py", got)
+            self.assertIn("hooks/UserPromptSubmit/screen_prompt.py", got)
+            code, _, err = run("--layout", "claude", "--into", tmp, "--hooks")
+            self.assertEqual(code, 2)
+            self.assertIn("--hooks is for --layout bwn", err)
+
     def test_bad_part_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:
             code, _, err = run("--layout", "claude", "--into", tmp, "--only", "plugins")

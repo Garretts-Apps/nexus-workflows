@@ -7,7 +7,7 @@
           {
             "type": "command",
             "timeout": 8,
-            "command": "python \"${KIT_ROOT}/scripts/guard_shell.py\""
+            "command": "python3 \"${KIT_ROOT}/scripts/guard_shell.py\""
           }
         ]
       },
@@ -17,7 +17,7 @@
           {
             "type": "command",
             "timeout": 8,
-            "command": "python \"${KIT_ROOT}/scripts/guard_writes.py\""
+            "command": "python3 \"${KIT_ROOT}/scripts/guard_writes.py\""
           }
         ]
       }
@@ -28,7 +28,7 @@
           {
             "type": "command",
             "timeout": 8,
-            "command": "python \"${KIT_ROOT}/scripts/screen_prompt.py\""
+            "command": "python3 \"${KIT_ROOT}/scripts/screen_prompt.py\""
           }
         ]
       }
@@ -40,7 +40,7 @@
           {
             "type": "command",
             "timeout": 8,
-            "command": "python \"${KIT_ROOT}/scripts/strip_invisible.py\""
+            "command": "python3 \"${KIT_ROOT}/scripts/strip_invisible.py\""
           }
         ]
       }

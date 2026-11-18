@@ -25,6 +25,19 @@ if os.name == "nt":
     )
 
 
+# Tools that write files, by the names harnesses use. A payload with some
+# other tool_name (a read, a search) is none of this guard's business.
+WRITE_TOOLS = {
+    "write", "edit", "multiedit", "notebookedit",
+    "write_file", "edit_file", "multi_edit", "create_file", "remove_path", "move_path", "create_dir",
+}
+
+
+def is_write(payload):
+    name = str(payload.get("tool_name") or "").lower()
+    return not name or name in WRITE_TOOLS
+
+
 def deny(msg):
     print(msg, file=sys.stderr)
     sys.exit(2)
@@ -47,6 +60,8 @@ def main():
     try:
         payload = json.load(sys.stdin)
     except json.JSONDecodeError:
+        sys.exit(0)
+    if not is_write(payload):
         sys.exit(0)
     cwd_s = payload.get("cwd") or os.getcwd()
     cwd = Path(cwd_s)
