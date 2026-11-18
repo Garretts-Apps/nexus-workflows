@@ -16,6 +16,7 @@ Fails (exit 1) when:
   points at nothing;
 - a shell block in the kit's own Markdown has no `# expect:` line
   (scripts/lint_blocks.py);
+- INDEX.md is stale (scripts/build_index.py --check);
 - a Python script does not compile;
 - the tests in tests/ fail.
 
@@ -143,6 +144,14 @@ def check_blocks(problems):
             problems.extend(p.replace(str(path), rel(path), 1) for p in lint(path))
 
 
+def check_index(problems):
+    """INDEX.md is generated; a stale one lies about the kit."""
+    run = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_index.py"), "--check"],
+                         capture_output=True, text=True)
+    if run.returncode != 0:
+        problems.append((run.stdout or run.stderr).strip())
+
+
 def check_python(problems):
     for path in sorted(ROOT.rglob("*.py")):
         if ".git" in path.parts:
@@ -171,6 +180,7 @@ def main(argv):
     check_voice(problems)
     check_references(problems)
     check_blocks(problems)
+    check_index(problems)
     check_python(problems)
     if "--no-tests" not in argv:
         check_tests(problems)

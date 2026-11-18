@@ -13,6 +13,7 @@ It is Markdown and standard-library Python. No install step, no dependencies, no
 | `hooks/` | Example wiring for the guards. Off until you turn it on. |
 | `workflows-examples/` | GitHub Actions to copy: secret scan, dependency audit, CodeQL. |
 | `AGENTS.md` | House rules for any agent working in a repo that uses the kit. |
+| `INDEX.md` | Every command, skill, helper and script on one page, generated so it can't go stale. |
 | `VOICE.md` | How the kit talks, and the words it won't use. |
 
 ## What it insists on

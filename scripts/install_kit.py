@@ -38,7 +38,7 @@ def sources(part):
     for path in sorted(base.rglob("*")):
         if not path.is_file() or "__pycache__" in path.parts:
             continue
-        if part == "scripts" and path.name in {"check_kit.py", "install_kit.py"}:
+        if part == "scripts" and path.name in {"check_kit.py", "install_kit.py", "build_index.py"}:
             continue  # kit maintenance, not something a harness runs
         yield path, path.relative_to(base)
 
