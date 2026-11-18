@@ -1,0 +1,49 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|run_command|check_work",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 8,
+            "command": "python \"${KIT_ROOT}/scripts/guard_shell.py\""
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 8,
+            "command": "python \"${KIT_ROOT}/scripts/guard_writes.py\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 8,
+            "command": "python \"${KIT_ROOT}/scripts/screen_prompt.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 8,
+            "command": "python \"${KIT_ROOT}/scripts/strip_invisible.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
