@@ -20,7 +20,7 @@ Copy only what you need. Names must match on disk (e.g. `commit.md` → `/commit
 
 ### buildwithnexus (bwn)
 
-Many of these commands ship **built-in** in current bwn releases. To override or extend, copy into `~/.buildwithnexus/commands/`, `~/.buildwithnexus/skills/`, or `~/.buildwithnexus/agents/`. Hook scripts: `~/.buildwithnexus/hooks/` plus `hooks` in `~/.buildwithnexus/settings.json`.
+bwn bundles `/test`, `/handoff`, `/changelog`, `/design-pass`, `/deslop` and the `distinctive-design` and `deslop` skills (on bwn's main branch after 0.21.0). Its own `/commit`, `/review`, `/pr` and `/debug` run before any command file of those names, so copies of this kit's versions run only headless (`bwn run '/commit'`). To override or extend, copy into `~/.buildwithnexus/commands/`, `~/.buildwithnexus/skills/`, or `~/.buildwithnexus/agents/`. Hook scripts: `~/.buildwithnexus/hooks/` plus `hooks` in `~/.buildwithnexus/settings.json`.
 
 ### Claude Code
 
