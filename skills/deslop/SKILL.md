@@ -41,5 +41,3 @@ End with a Kept list. In `--report` and `--ci`, stop after the report.
 When edits are allowed: unicode, comments, repo artifacts, formatting, writing, code smells, design. One commit per category with subject `deslop: <category>`. Run the project's tests after each commit and quote the result. Do not amend or push.
 
 When the tree has UI, read `distinctive-design` and report generated-default patterns. Fix design only in a design commit for the screen in scope.
-
-For the full checklist (comments, writing, formatting, code smells), follow the same rules as the public workflow kit's `deslop` skill body.

@@ -102,7 +102,6 @@ def duplicate_blocks(root: Path):
             if len(text) < MIN_BLOCK_LEN:
                 continue
             digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
-            key = (digest, text[:60])
             if digest in seen and seen[digest] != rel:
                 dups.append(("DUP_BLOCK", rel, f"{seen[digest]} vs {rel}:{i + 1}"))
             else:
@@ -146,13 +145,14 @@ def scan(root: Path):
 def main():
     parser = argparse.ArgumentParser(description="Report entropy hotspots.")
     parser.add_argument("paths", nargs="*", type=Path, default=[Path.cwd()])
-    parser.add_argument("--report", action="store_true", help="print and exit 0")
+    parser.add_argument("--report", action="store_true", help="print and exit 0 (the default; kept for scripts)")
     args = parser.parse_args()
     all_findings = []
     for path in args.paths:
         if not path.exists():
             print(f"missing: {path}", file=sys.stderr)
             return 2
+        path = path.resolve()
         base = path if path.is_dir() else path.parent
         all_findings.extend(scan(base))
     def sort_key(item):

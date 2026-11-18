@@ -16,8 +16,6 @@ def scrub(text):
         cp = ord(ch)
         if cp in STRIP or cp in BIDI or cp in TAG:
             continue
-        if cp == 0xFEFF and not out:
-            continue
         out.append(ch)
     return "".join(out)
 

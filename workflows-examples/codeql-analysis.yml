@@ -11,11 +11,13 @@ on:
 
 jobs:
   analyze:
-    runs-on: ${{ matrix.os }}
+    # JavaScript and Python are analyzed from source, so one OS is enough. A
+    # second OS uploads a second result under the same category, which
+    # code scanning rejects.
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
         language: [javascript, python]
     permissions:
       security-events: write
@@ -30,3 +32,5 @@ jobs:
         uses: github/codeql-action/autobuild@v3
       - name: Analyze
         uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}

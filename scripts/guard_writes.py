@@ -57,9 +57,12 @@ def main():
     path = Path(fp)
     if not path.is_absolute():
         path = cwd / path
-    norm = os.path.normcase(str(path))
+    # A system directory is off limits unless the session itself runs inside
+    # it (a project under /var/www). Compare whole path components, so
+    # /usrlocal is not /usr.
     for prefix in BLOCKED:
-        if norm.startswith(os.path.normcase(prefix)):
+        root = Path(prefix)
+        if resolve_under(root, path) and not resolve_under(root, cwd):
             deny(f"blocked write outside project tree: {fp}")
     if not resolve_under(cwd, path):
         deny(f"blocked write outside cwd: {fp}")
