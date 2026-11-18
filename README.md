@@ -6,8 +6,8 @@ It is Markdown and standard-library Python. No install step, no dependencies, no
 
 | Path | What it is |
 | --- | --- |
-| `commands/` | 46 slash commands. `commit.md` is `/commit`. The body is the prompt; `description` is what the popup shows. |
-| `skills/` | 7 skills, one `<name>/SKILL.md` each, with `name` and `description` frontmatter. |
+| `commands/` | 47 slash commands. `commit.md` is `/commit`. The body is the prompt; `description` is what the popup shows. |
+| `skills/` | 8 skills, one `<name>/SKILL.md` each, with `name` and `description` frontmatter. |
 | `agents/` | 4 read-only helpers: `reviewer`, `security-check`, `pipeline-reviewer`, `debugger`. |
 | `scripts/` | Guards and scanners. Python 3, stdlib only, Linux, macOS and Windows. |
 | `hooks/` | Example wiring for the guards. Off until you turn it on. |
@@ -45,18 +45,18 @@ Hooks: see `hooks/README.md`.
 
 From the kit root, or point them at any tree:
 
-```bash
-python3 scripts/scan_slop.py --report .      # invisible Unicode, smart quotes, stray dashes
-python3 scripts/scan_secrets.py --report .   # key shapes and labeled secrets
-python3 scripts/measure_entropy.py --report . # big files, repeated blocks, churn
-```
+- `python3 scripts/scan_slop.py --report .` for invisible Unicode, smart quotes and stray dashes. `--ci` exits 1 only on characters you can't see.
+- `python3 scripts/scan_secrets.py --report .` for key shapes and labeled secrets.
+- `python3 scripts/measure_entropy.py --report .` for big files, repeated blocks and churn.
+- `python3 scripts/lint_blocks.py <file.md>` for command blocks someone will paste: each must end with `# expect: <text>`. `/rehearse` takes it from there.
 
-`scan_slop.py --ci` exits 1 only on characters you can't see. The other two report and exit 0.
+The scanners report and exit 0. A clean tree prints nothing, which is the most enthusiasm they've got.
 
 ## Checking the kit
 
 ```bash
 python3 scripts/check_kit.py
+# expect: kit ok
 ```
 
 Frontmatter, voice, every backticked path and slash command resolving, every script compiling, and the guard tests in `tests/`. CI runs it on Linux, macOS and Windows. It prints `kit ok` or a list, which is the only mood it has.
