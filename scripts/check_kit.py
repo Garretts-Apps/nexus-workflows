@@ -14,6 +14,8 @@ Fails (exit 1) when:
   tool as a reference point;
 - a backticked kit path (`scripts/x.py`, `skills/x/SKILL.md`, `/command`)
   points at nothing;
+- a shell block in the kit's own Markdown has no `# expect:` line
+  (scripts/lint_blocks.py);
 - a Python script does not compile;
 - the tests in tests/ fail.
 
@@ -32,7 +34,7 @@ BANNED = [
     "awesome", "superpowers?", "supercharg\\w*", "unleash\\w*", "seamless\\w*",
     "leverag\\w*", "robust", "curated", "battle-tested", "best practices",
     "game-changer", "cutting-edge", "powerful", "blazing", "revolutioni[sz]e\\w*",
-    "elevate\\w*", "empower\\w*", "delve\\w*", "comprehensive", "magic(al)?",
+    "elevates?", "empower\\w*", "delve\\w*", "comprehensive", "magic(al)?",
     "agentic", "vendor-neutral",
 ]
 # Other tools, as proper names. Case-sensitive so a text cursor is fine.
@@ -132,6 +134,15 @@ def check_references(problems):
                     problems.append(f"{rel(path)}:{i}: `/{m.group(1)}` is not a command in commands/")
 
 
+def check_blocks(problems):
+    """Every shell block in the kit's own docs follows its own rule."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from lint_blocks import lint
+    for path in text_files():
+        if path.suffix == ".md":
+            problems.extend(p.replace(str(path), rel(path), 1) for p in lint(path))
+
+
 def check_python(problems):
     for path in sorted(ROOT.rglob("*.py")):
         if ".git" in path.parts:
@@ -159,6 +170,7 @@ def main(argv):
     check_frontmatter(problems)
     check_voice(problems)
     check_references(problems)
+    check_blocks(problems)
     check_python(problems)
     if "--no-tests" not in argv:
         check_tests(problems)

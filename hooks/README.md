@@ -25,6 +25,7 @@ Exit code `2` means deny (PreToolUse / UserPromptSubmit). PostToolUse hooks only
 
 ```bash
 echo '{"tool_input":{"command":"git push -f origin main"}}' | python3 scripts/guard_shell.py; echo exit:$?
+# expect: exit:2
 ```
 
 Exit 2 and a reason on stderr means blocked.
