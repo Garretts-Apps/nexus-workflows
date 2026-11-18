@@ -15,7 +15,7 @@ A test is a claim about behavior someone depends on. Pin that, not the current s
 - **It would fail if the behavior broke.** If you can't say what would make it fail, it's decoration. Delete it.
 - **The contract callers use,** not private helpers. Read the callers before you write the test.
 - **The edges the code actually handles:** empty, one, boundary, invalid, the error path. Not every permutation of the same branch.
-- **Wide input space** (parsers, serializers, money, dates): a property-based test finds what three examples won't.
+- **Wide input space** (parsers, serializers, money, dates): a property-based test finds what three examples won't. `/lean` states the properties as a spec first, proves what it can, and writes those tests.
 
 ## What it must never be
 
